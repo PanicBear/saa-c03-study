@@ -110,10 +110,8 @@ export async function getStaticPaths() {
 }
 
 export const getStaticProps = (async (ctx) => {
-  let question =
-    "./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md";
-  let explanation =
-    "./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md";
+  let question = `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md`;
+  let explanation = `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`;
   let err = "";
 
   try {

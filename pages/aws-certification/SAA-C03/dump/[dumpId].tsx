@@ -110,13 +110,13 @@ export async function getStaticPaths() {
 }
 
 export const getStaticProps = (async (ctx) => {
-  let question = `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md`;
-  let explanation = `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`;
+  let question = "";
+  let explanation = "";
   let err = "";
 
   try {
     const questionFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md`
+      `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.dumpId}/문제.md`
     );
     const explanationFile = matter.read(
       `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`
@@ -126,10 +126,15 @@ export const getStaticProps = (async (ctx) => {
       .use(remarkParse)
       .use(remarkHtml)
       .process(questionFile.content);
+
+    question = parsedQuestion.value + "";
+
     const parsedExplanation = await unified()
       .use(remarkParse)
       .use(remarkHtml)
       .process(explanationFile.content);
+
+    question = parsedExplanation.value + "";
 
     question = (parsedQuestion.value + "")
       .replace(...wrapAnswerSheet("A"))
@@ -147,7 +152,7 @@ export const getStaticProps = (async (ctx) => {
       .replace(...wrapAnswer())
       .replace(WIKI_LINK, (...props) => termWikiLinkReplacer(props));
   } catch (error) {
-    err = JSON.stringify(err);
+    err = JSON.stringify(error);
   }
 
   return {

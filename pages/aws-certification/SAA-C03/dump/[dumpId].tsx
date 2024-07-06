@@ -112,14 +112,14 @@ export async function getStaticPaths() {
 export const getStaticProps = (async (ctx) => {
   let question = "";
   let explanation = "";
-  let err = "";
+  let err = process.cwd();
 
   try {
     const questionFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.dumpId}/문제.md`
+      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/문제.md`
     );
     const explanationFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`
+      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/해설.md`
     );
 
     const parsedQuestion = await unified()

@@ -8,8 +8,7 @@ import { unified } from "unified";
 
 const Post: NextPage<{
   post: string;
-  data: { title: string; date: string; category: string };
-}> = ({ post, data }) => {
+}> = ({ post }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,7 +41,7 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { content, data } = matter.read(
-    `./public/AWS Certification/SAA-C03/용어설명/${ctx.params?.slug}.md`
+    `./public/AWS Certification/SAA-C03/용어설명/${ctx.params?.termId}.md`
   );
   const { value } = await unified()
     .use(remarkParse)
@@ -59,7 +58,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   return {
     props: {
       post,
-      data,
     },
   };
 };

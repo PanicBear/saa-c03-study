@@ -6,14 +6,10 @@ body {
   overflow-y: scroll;
 }
 
-.blog-post_content h1 {
-  @apply text-red-500 mb-5;
+hr {
+  @apply pb-6 mt-6;
 }
 
-.blog-post_content p {
-  @apply mb-1 text-gray-600;
-}
-
-.blog-post_content ul {
-  @apply pl-10 list-disc;
+a {
+  @apply text-blue-400 underline underline-offset-4 hover:text-blue-500;
 }

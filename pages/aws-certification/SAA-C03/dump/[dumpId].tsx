@@ -1,6 +1,5 @@
 import Drawer from "@/components/drawer";
 import Floating from "@/components/floating";
-import { DUMP_PREFIX } from "@/constants";
 import { WIKI_LINK } from "@/constants/regex";
 import {
   termWikiLinkReplacer,
@@ -115,9 +114,7 @@ export const getStaticProps = (async (ctx) => {
   let err = process.cwd();
 
   try {
-    const questionFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/문제.md`
-    );
+    const questionFile = matter.read(`./AWS Certification/SAA-C03/link.md`);
     const explanationFile = matter.read(`./AWS Certification/SAA-C03/link.md`);
 
     const parsedQuestion = await unified()
@@ -163,4 +160,5 @@ export const getStaticProps = (async (ctx) => {
 }) satisfies GetStaticProps<{
   question: string;
   explanation: string;
+  err: string;
 }>;

@@ -6,6 +6,7 @@ import remarkHtml from "remark-html";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 
+// TODO : wiki link for term
 const Post: NextPage<{
   post: string;
 }> = ({ post }) => {
@@ -41,7 +42,7 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { content, data } = matter.read(
-    `./public/AWS Certification/SAA-C03/용어설명/${ctx.params?.termId}.md`
+    `./AWS Certification/SAA-C03/용어설명/${ctx.params?.termId}.md`
   );
   const { value } = await unified()
     .use(remarkParse)
@@ -51,9 +52,9 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   // const regexp = new RegExp(WIKI_LINK, "gi");
   const regexp = new RegExp(WIKI_LINK);
 
-  const post = (value + "")
-    // .replaceAll(WIKI_ORIGIN, "")
-    .replace(regexp, "<a href='/$1'>$2</a>");
+  const post = value + "";
+  // .replaceAll(WIKI_ORIGIN, "")
+  // .replace(regexp, "<a href='/$1'>$2</a>");
 
   return {
     props: {

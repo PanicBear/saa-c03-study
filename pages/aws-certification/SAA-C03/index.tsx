@@ -1,6 +1,5 @@
 import LinkItem from "@/components/linkItem";
 import List from "@/components/list";
-import { twMerge } from "tailwind-merge";
 
 export default function Page() {
   return (

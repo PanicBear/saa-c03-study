@@ -116,10 +116,10 @@ export const getStaticProps = (async (ctx) => {
 
   try {
     const questionFile = matter.read(
-      `./public/AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md`
+      `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md`
     );
     const explanationFile = matter.read(
-      `./public/AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`
+      `./AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`
     );
 
     const parsedQuestion = await unified()

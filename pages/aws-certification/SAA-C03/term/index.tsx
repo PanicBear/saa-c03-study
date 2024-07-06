@@ -17,10 +17,10 @@ export default function Page({
 }
 
 export const getStaticProps = (async (ctx) => {
-  const list = readdirSync("./public/AWS Certification/SAA-C03/용어설명").map(
+  const list = readdirSync("./AWS Certification/SAA-C03/용어설명").map(
     (file) => {
       const content = readFileSync(
-        `./public/AWS Certification/SAA-C03/용어설명/${file}`,
+        `./AWS Certification/SAA-C03/용어설명/${file}`,
         "utf-8"
       );
       const title = file.substring(0, file.lastIndexOf(".")) || file;

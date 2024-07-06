@@ -18,6 +18,7 @@ import { unified } from "unified";
 export default function Post({
   question,
   explanation,
+  err,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const answerA = useRef<HTMLElement | null>(null);
   const answerB = useRef<HTMLElement | null>(null);
@@ -47,6 +48,10 @@ export default function Post({
     },
     [answer]
   );
+
+  useEffect(() => {
+    console.log(err);
+  }, [err]);
 
   useEffect(() => {
     answerA.current = document.querySelector("#answer-A");
@@ -105,42 +110,51 @@ export async function getStaticPaths() {
 }
 
 export const getStaticProps = (async (ctx) => {
-  const questionFile = matter.read(
-    `./public/AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md`
-  );
-  const explanationFile = matter.read(
-    `./public/AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`
-  );
+  let question = "";
+  let explanation = "";
+  let err = "";
 
-  const parsedQuestion = await unified()
-    .use(remarkParse)
-    .use(remarkHtml)
-    .process(questionFile.content);
-  const parsedExplanation = await unified()
-    .use(remarkParse)
-    .use(remarkHtml)
-    .process(explanationFile.content);
+  try {
+    const questionFile = matter.read(
+      `./public/AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/문제.md`
+    );
+    const explanationFile = matter.read(
+      `./public/AWS Certification/SAA-C03/덤프/${DUMP_PREFIX}${ctx.params?.dumpId}/해설.md`
+    );
 
-  const question = (parsedQuestion.value + "")
-    .replace(...wrapAnswerSheet("A"))
-    .replace(...wrapAnswerSheet("B"))
-    .replace(...wrapAnswerSheet("C"))
-    .replace(...wrapAnswerSheet("D"))
-    .replace(WIKI_LINK, (_, link, alias) => {
-      if (alias)
-        return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${alias}</a>`;
+    const parsedQuestion = await unified()
+      .use(remarkParse)
+      .use(remarkHtml)
+      .process(questionFile.content);
+    const parsedExplanation = await unified()
+      .use(remarkParse)
+      .use(remarkHtml)
+      .process(explanationFile.content);
 
-      return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${link}</a>`;
-    });
+    question = (parsedQuestion.value + "")
+      .replace(...wrapAnswerSheet("A"))
+      .replace(...wrapAnswerSheet("B"))
+      .replace(...wrapAnswerSheet("C"))
+      .replace(...wrapAnswerSheet("D"))
+      .replace(WIKI_LINK, (_, link, alias) => {
+        if (alias)
+          return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${alias}</a>`;
 
-  const explanation = (parsedExplanation.value + "")
-    .replace(...wrapAnswer())
-    .replace(WIKI_LINK, (...props) => termWikiLinkReplacer(props));
+        return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${link}</a>`;
+      });
+
+    explanation = (parsedExplanation.value + "")
+      .replace(...wrapAnswer())
+      .replace(WIKI_LINK, (...props) => termWikiLinkReplacer(props));
+  } catch (error) {
+    err = JSON.stringify(err);
+  }
 
   return {
     props: {
       question,
       explanation,
+      err,
     },
   };
 }) satisfies GetStaticProps<{

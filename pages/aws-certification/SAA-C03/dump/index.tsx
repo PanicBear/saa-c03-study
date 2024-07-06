@@ -22,7 +22,7 @@ export default function Page({
 }
 
 export const getStaticProps = (async () => {
-  const list = readdirSync("./AWS Certification/SAA-C03/덤프")
+  const list = readdirSync("/AWS Certification/SAA-C03/덤프")
     .map((item) => +item.replace(DUMP_ID, "$1"))
     .sort((a, b) => a - b);
 

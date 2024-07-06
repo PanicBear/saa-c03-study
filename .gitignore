@@ -36,5 +36,7 @@ yarn-error.log*
 next-env.d.ts
 
 # obsidian
+public/AWS Certification/.obsidian/*
+public/AWS Certification/SAA-C03/.obsidian/*
 AWS Certification/.obsidian/*
 AWS Certification/SAA-C03/.obsidian/*

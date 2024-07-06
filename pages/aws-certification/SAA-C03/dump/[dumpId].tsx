@@ -115,7 +115,9 @@ export const getStaticProps = (async (ctx) => {
   let err = process.cwd();
 
   try {
-    const questionFile = matter.read(`/AWS Certification/SAA-C03/link.md`);
+    const questionFile = matter.read(
+      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/문제.md`
+    );
     const explanationFile = matter.read(`./AWS Certification/SAA-C03/link.md`);
 
     const parsedQuestion = await unified()

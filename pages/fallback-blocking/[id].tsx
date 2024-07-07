@@ -116,7 +116,7 @@ export const getStaticProps = (async (ctx) => {
 
   try {
     const questionFile = matter.read(
-      `./sample-file/sample${ctx.params?.id}.md`
+      `${process.cwd()}/sample-file/sample${ctx.params?.id}.md`
     );
 
     const parsedQuestion = await unified()

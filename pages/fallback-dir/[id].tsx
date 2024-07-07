@@ -6,7 +6,7 @@ import {
   wrapAnswer,
   wrapAnswerSheet,
 } from "@/utils/obsidian";
-import matter from "gray-matter";
+import { readdirSync, readFileSync } from "fs";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
 import remarkHtml from "remark-html";
@@ -17,7 +17,6 @@ import { unified } from "unified";
 export default function Post({
   question,
   explanation,
-  err,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const answerA = useRef<HTMLElement | null>(null);
   const answerB = useRef<HTMLElement | null>(null);
@@ -47,10 +46,6 @@ export default function Post({
     },
     [answer]
   );
-
-  useEffect(() => {
-    console.log(err);
-  }, [err]);
 
   useEffect(() => {
     answerA.current = document.querySelector("#answer-A");
@@ -104,63 +99,59 @@ export default function Post({
 export const getStaticPaths = (() => {
   return {
     paths: [],
-    fallback: false,
+    fallback: "blocking",
   };
 }) satisfies GetStaticPaths;
 
 export const getStaticProps = (async (ctx) => {
   let question = "";
   let explanation = "";
-  let err = process.cwd();
 
-  try {
-    const questionFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/문제.md`
+  const fileNames = readdirSync(
+    `./AWS Certification/SAA-C03/덤프/${ctx.params?.id}`
+  );
+
+  const [questionFile, explanationFile] = fileNames.map((name) => {
+    return readFileSync(
+      `./AWS Certification/SAA-C03/덤프/${ctx.params?.id}/${name}`,
+      "utf-8"
     );
-    const explanationFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/해설.md`
-    );
+  });
 
-    const parsedQuestion = await unified()
-      .use(remarkParse)
-      .use(remarkHtml)
-      .process(questionFile.content);
-    const parsedExplanation = await unified()
-      .use(remarkParse)
-      .use(remarkHtml)
-      .process(explanationFile.content);
+  const parsedQuestion = await unified()
+    .use(remarkParse)
+    .use(remarkHtml)
+    .process(questionFile);
+  const parsedExplanation = await unified()
+    .use(remarkParse)
+    .use(remarkHtml)
+    .process(explanationFile);
 
-    question = parsedQuestion.value + "";
-    explanation = parsedExplanation.value + "";
+  question = parsedQuestion.value + "";
+  explanation = parsedExplanation.value + "";
 
-    question = (parsedQuestion.value + "")
-      .replace(...wrapAnswerSheet("A"))
-      .replace(...wrapAnswerSheet("B"))
-      .replace(...wrapAnswerSheet("C"))
-      .replace(...wrapAnswerSheet("D"))
-      .replace(WIKI_LINK, (_, link, alias) => {
-        if (alias)
-          return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${alias}</a>`;
+  question = (parsedQuestion.value + "")
+    .replace(...wrapAnswerSheet("A"))
+    .replace(...wrapAnswerSheet("B"))
+    .replace(...wrapAnswerSheet("C"))
+    .replace(...wrapAnswerSheet("D"))
+    .replace(WIKI_LINK, (_, link, alias) => {
+      if (alias)
+        return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${alias}</a>`;
 
-        return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${link}</a>`;
-      });
-    explanation = (parsedExplanation.value + "")
-      .replace(...wrapAnswer())
-      .replace(WIKI_LINK, (...props) => termWikiLinkReplacer(props));
-  } catch (error) {
-    err = JSON.stringify(error);
-  }
+      return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${link}</a>`;
+    });
+  explanation = (parsedExplanation.value + "")
+    .replace(...wrapAnswer())
+    .replace(WIKI_LINK, (...props) => termWikiLinkReplacer(props));
 
   return {
     props: {
       question,
       explanation,
-      err,
-      reavalidate: 5,
     },
   };
 }) satisfies GetStaticProps<{
   question: string;
   explanation: string;
-  err: string;
 }>;

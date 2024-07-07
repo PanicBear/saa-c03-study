@@ -24,6 +24,9 @@ export const getStaticProps = (async (ctx) => {
         "utf-8"
       );
       const title = file.substring(0, file.lastIndexOf(".")) || file;
+
+      console.log(file);
+
       return { ...matter(content).data, title };
     }
   );

@@ -1,5 +1,6 @@
 import Drawer from "@/components/drawer";
 import Floating from "@/components/floating";
+import { DUMP_PREFIX } from "@/constants";
 import { WIKI_LINK } from "@/constants/regex";
 import {
   termWikiLinkReplacer,
@@ -7,7 +8,7 @@ import {
   wrapAnswerSheet,
 } from "@/utils/obsidian";
 import matter from "gray-matter";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
 import remarkHtml from "remark-html";
 import remarkParse from "remark-parse";
@@ -101,12 +102,12 @@ export default function Post({
   );
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths = (() => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: false,
   };
-}
+}) satisfies GetStaticPaths;
 
 export const getStaticProps = (async (ctx) => {
   let question = "";
@@ -114,8 +115,12 @@ export const getStaticProps = (async (ctx) => {
   let err = process.cwd();
 
   try {
-    const questionFile = matter.read(`./AWS Certification/SAA-C03/link.md`);
-    const explanationFile = matter.read(`./AWS Certification/SAA-C03/link.md`);
+    const questionFile = matter.read(
+      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/문제.md`
+    );
+    const explanationFile = matter.read(
+      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/해설.md`
+    );
 
     const parsedQuestion = await unified()
       .use(remarkParse)
@@ -155,6 +160,7 @@ export const getStaticProps = (async (ctx) => {
       question,
       explanation,
       err,
+      reavalidate: 5,
     },
   };
 }) satisfies GetStaticProps<{

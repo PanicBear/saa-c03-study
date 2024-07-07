@@ -1,6 +1,6 @@
 import { WIKI_LINK } from "@/constants/regex";
 import matter from "gray-matter";
-import { GetStaticProps, NextPage } from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useEffect, useRef } from "react";
 import remarkHtml from "remark-html";
 import remarkParse from "remark-parse";
@@ -33,12 +33,12 @@ const Post: NextPage<{
   );
 };
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",
   };
-}
+};
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { content, data } = matter.read(
@@ -60,6 +60,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     props: {
       post,
     },
+    revalidate: 5,
   };
 };
 

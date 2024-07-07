@@ -7,7 +7,9 @@ import {
   wrapAnswerSheet,
 } from "@/utils/obsidian";
 import { readdirSync, readFileSync } from "fs";
+import matter from "gray-matter";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import path from "path";
 import { useCallback, useEffect, useRef, useState } from "react";
 import remarkHtml from "remark-html";
 import remarkParse from "remark-parse";
@@ -18,80 +20,16 @@ export default function Post({
   question,
   explanation,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const answerA = useRef<HTMLElement | null>(null);
-  const answerB = useRef<HTMLElement | null>(null);
-  const answerC = useRef<HTMLElement | null>(null);
-  const answerD = useRef<HTMLElement | null>(null);
-  const correctAnswer = useRef<HTMLElement | null>(null);
-
-  const [isOpen, setOpen] = useState<boolean>(false);
-  const [answer, setAnswer] = useState<Answer>();
-
-  const handleShowAnswerButtonClick = useCallback(
-    () => setOpen((prev) => !prev),
-    []
-  );
-
-  const handleSelectAnswer = useCallback(
-    (target: HTMLElement | null, selected: Answer) => {
-      if (target === null) throw new Error("target element is null");
-
-      const isAnswerCorrect = selected === answer;
-
-      target.classList.remove("hover:bg-blue-300");
-
-      isAnswerCorrect
-        ? target.classList.add("bg-green-400")
-        : target.classList.add("bg-red-400");
-    },
-    [answer]
-  );
-
-  useEffect(() => {
-    answerA.current = document.querySelector("#answer-A");
-    answerB.current = document.querySelector("#answer-B");
-    answerC.current = document.querySelector("#answer-C");
-    answerD.current = document.querySelector("#answer-D");
-    correctAnswer.current = document.querySelector("#answer");
-
-    if (answerA.current) {
-      answerA.current.onclick = () => handleSelectAnswer(answerA.current, "A");
-    }
-    if (answerB.current) {
-      answerB.current.onclick = () => handleSelectAnswer(answerB.current, "B");
-    }
-    if (answerC.current) {
-      answerC.current.onclick = () => handleSelectAnswer(answerC.current, "C");
-    }
-    if (answerD.current) {
-      answerD.current.onclick = () => handleSelectAnswer(answerD.current, "D");
-    }
-    if (correctAnswer.current) {
-      const parsedAnswer = correctAnswer.current.innerHTML?.match(
-        /([A|B|C|D])./
-      )?.[1] as Answer;
-
-      if (!parsedAnswer) throw new Error("answer not parsed");
-
-      setAnswer((prev) => (prev === parsedAnswer ? prev : parsedAnswer));
-    }
-  }, [handleSelectAnswer]);
-
   return (
     <>
       <article
         className={twMerge("p-4")}
         dangerouslySetInnerHTML={{ __html: question }}
       />
-      {/* <div dangerouslySetInnerHTML={{ __html: explanation }} /> */}
-
-      <Drawer
-        open={isOpen}
-        side="bottom"
-        setOpen={setOpen}
-        content={<article dangerouslySetInnerHTML={{ __html: explanation }} />}
+      <article
+        className={twMerge("p-4")}
+        dangerouslySetInnerHTML={{ __html: explanation }}
       />
-      <Floating onClick={handleShowAnswerButtonClick} />
     </>
   );
 }
@@ -104,46 +42,25 @@ export const getStaticPaths = (() => {
 }) satisfies GetStaticPaths;
 
 export const getStaticProps = (async (ctx) => {
-  let question = "";
-  let explanation = "";
+  // let question = "";
+  // let explanation = "";
 
-  const fileNames = readdirSync(
-    `./AWS Certification/SAA-C03/덤프/${ctx.params?.id}`
-  );
-
-  const [questionFile, explanationFile] = fileNames.map((name) => {
-    return readFileSync(
-      `./AWS Certification/SAA-C03/덤프/${ctx.params?.id}/${name}`,
+  const [q, e] = readdirSync(
+    `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.id}`
+  ).map((fileName) => {
+    const content = readFileSync(
+      `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.id}/${fileName}`,
       "utf-8"
     );
+
+    return matter(content).content;
   });
 
-  const parsedQuestion = await unified()
-    .use(remarkParse)
-    .use(remarkHtml)
-    .process(questionFile);
-  const parsedExplanation = await unified()
-    .use(remarkParse)
-    .use(remarkHtml)
-    .process(explanationFile);
+  const question =
+    (await unified().use(remarkParse).use(remarkHtml).process(q)) + "";
 
-  question = parsedQuestion.value + "";
-  explanation = parsedExplanation.value + "";
-
-  question = (parsedQuestion.value + "")
-    .replace(...wrapAnswerSheet("A"))
-    .replace(...wrapAnswerSheet("B"))
-    .replace(...wrapAnswerSheet("C"))
-    .replace(...wrapAnswerSheet("D"))
-    .replace(WIKI_LINK, (_, link, alias) => {
-      if (alias)
-        return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${alias}</a>`;
-
-      return `<a href='/aws-certification/SAA-C03/term/${link}' target="_blank">${link}</a>`;
-    });
-  explanation = (parsedExplanation.value + "")
-    .replace(...wrapAnswer())
-    .replace(WIKI_LINK, (...props) => termWikiLinkReplacer(props));
+  const explanation =
+    (await unified().use(remarkParse).use(remarkHtml).process(e)) + "";
 
   return {
     props: {

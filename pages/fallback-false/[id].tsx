@@ -9,6 +9,7 @@ import {
 } from "@/utils/obsidian";
 import matter from "gray-matter";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import path from "path";
 import { useCallback, useEffect, useRef, useState } from "react";
 import remarkHtml from "remark-html";
 import remarkParse from "remark-parse";
@@ -116,7 +117,7 @@ export const getStaticProps = (async (ctx) => {
 
   try {
     const questionFile = matter.read(
-      `${process.cwd()}/sample-file/sample${ctx.params?.id}.md`
+      path.join(process.cwd(), "sample-file", `sample${ctx.params?.id}.md`)
     );
 
     const parsedQuestion = await unified()

@@ -1,6 +1,5 @@
 import Drawer from "@/components/drawer";
 import Floating from "@/components/floating";
-import { DUMP_PREFIX } from "@/constants";
 import { WIKI_LINK } from "@/constants/regex";
 import {
   termWikiLinkReplacer,

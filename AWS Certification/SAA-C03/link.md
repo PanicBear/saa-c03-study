@@ -1,7 +1,0 @@
-- [유데미 강의](https://www.udemy.com/course/best-aws-certified-solutions-architect-associate/?couponCode=KEEPLEARNING)
-- [무료 덤프 Examtopics](https://www.examtopics.com/exams/amazon/aws-certified-solutions-architect-associate-saa-c03/)
-- [무료 덤프 블로그](https://blog.naver.com/gam_jaong/222909260062)
-- [합격 후기](https://velog.io/@bona/AWS-Certified-Solutions-Architect-Associate-%EC%8B%9C%ED%97%98-%ED%9B%84%EA%B8%B0-%ED%95%A9%EA%B2%A9)
-
-- 준비물
-  - 신분증 - 여권

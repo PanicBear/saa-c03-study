@@ -16,7 +16,7 @@ export default function Page({
   );
 }
 
-export const getStaticProps = (async (ctx) => {
+export const getStaticProps = (async () => {
   const list = readdirSync("./AWS Certification/SAA-C03/용어설명").map(
     (file) => {
       const content = readFileSync(

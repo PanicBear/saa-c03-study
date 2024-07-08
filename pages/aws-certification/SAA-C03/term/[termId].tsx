@@ -1,67 +1,58 @@
-import { WIKI_LINK } from "@/constants/regex";
+import { DUMP_ID, WIKI_LINK } from "@/constants/regex";
 import matter from "gray-matter";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { useEffect, useRef } from "react";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import path from "path";
 import remarkHtml from "remark-html";
 import remarkParse from "remark-parse";
+import { twMerge } from "tailwind-merge";
 import { unified } from "unified";
 
 // TODO : wiki link for term
-const Post: NextPage<{
-  post: string;
-}> = ({ post }) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // WIKI_LINK.global;
-    const regexp = new RegExp(WIKI_LINK, "gi");
-
-    // console.log(regexp);
-
-    console.log(WIKI_LINK);
-
-    const content = ref.current?.textContent ?? "";
-    console.log(`${content} ${content}`.replaceAll(regexp, "test"));
-  }, []);
-
+export default function Term({
+  term,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div
-      ref={ref}
-      className="blog-post_content"
-      dangerouslySetInnerHTML={{ __html: post }}
+    <article
+      className={twMerge("p-4")}
+      dangerouslySetInnerHTML={{ __html: term }}
     />
   );
-};
+}
 
-export const getStaticPaths: GetStaticPaths = () => {
+export const getStaticPaths = (() => {
   return {
     paths: [],
     fallback: "blocking",
   };
-};
+}) satisfies GetStaticPaths;
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps = (async (ctx) => {
   const { content, data } = matter.read(
-    `./AWS Certification/SAA-C03/용어설명/${ctx.params?.termId}.md`
+    path.join(
+      process.cwd(),
+      "AWS Certification",
+      "SAA-C03",
+      "용어설명",
+      `${ctx.params?.termId}.md`
+    )
   );
   const { value } = await unified()
     .use(remarkParse)
     .use(remarkHtml)
     .process(content);
 
-  // const regexp = new RegExp(WIKI_LINK, "gi");
-  const regexp = new RegExp(WIKI_LINK);
+  const term = (value + "").replace(WIKI_LINK, (_, link, alias) => {
+    const dumpId = alias.replace(DUMP_ID, "$1");
 
-  const post = value + "";
-  // .replaceAll(WIKI_ORIGIN, "")
-  // .replace(regexp, "<a href='/$1'>$2</a>");
+    return `<a href='/aws-certification/SAA-C03/dump/${dumpId}' target="_blank">${alias}</a>`;
+  });
 
   return {
     props: {
-      post,
+      term,
     },
-    revalidate: 5,
+    revalidate: 1,
   };
-};
-
-export default Post;
+}) satisfies GetStaticProps<{
+  term: string;
+}>;

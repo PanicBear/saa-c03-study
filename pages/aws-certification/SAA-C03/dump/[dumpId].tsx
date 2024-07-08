@@ -15,7 +15,7 @@ import remarkParse from "remark-parse";
 import { twMerge } from "tailwind-merge";
 import { unified } from "unified";
 
-export default function Post({
+export default function Dump({
   question,
   explanation,
   err,
@@ -89,7 +89,6 @@ export default function Post({
         className={twMerge("p-4")}
         dangerouslySetInnerHTML={{ __html: question }}
       />
-      {/* <div dangerouslySetInnerHTML={{ __html: explanation }} /> */}
 
       <Drawer
         open={isOpen}

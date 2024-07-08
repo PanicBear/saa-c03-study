@@ -8,6 +8,7 @@ import {
 } from "@/utils/obsidian";
 import matter from "gray-matter";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import path from "path";
 import { useCallback, useEffect, useRef, useState } from "react";
 import remarkHtml from "remark-html";
 import remarkParse from "remark-parse";
@@ -104,7 +105,7 @@ export default function Post({
 export const getStaticPaths = (() => {
   return {
     paths: [],
-    fallback: false,
+    fallback: "blocking",
   };
 }) satisfies GetStaticPaths;
 
@@ -115,10 +116,24 @@ export const getStaticProps = (async (ctx) => {
 
   try {
     const questionFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/문제.md`
+      path.join(
+        process.cwd(),
+        "AWS Certification",
+        "SAA-C03",
+        "덤프",
+        `문제${ctx.params?.dumpId}`,
+        "문제.md"
+      )
     );
     const explanationFile = matter.read(
-      `./AWS Certification/SAA-C03/덤프/${ctx.params?.dumpId}/해설.md`
+      path.join(
+        process.cwd(),
+        "AWS Certification",
+        "SAA-C03",
+        "덤프",
+        `문제${ctx.params?.dumpId}`,
+        "해설.md"
+      )
     );
 
     const parsedQuestion = await unified()
@@ -156,7 +171,7 @@ export const getStaticProps = (async (ctx) => {
       question,
       explanation,
       err,
-      reavalidate: 5,
+      reavalidate: 1,
     },
   };
 }) satisfies GetStaticProps<{

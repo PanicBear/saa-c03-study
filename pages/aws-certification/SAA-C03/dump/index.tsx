@@ -11,11 +11,7 @@ export default function Page({
   return (
     <List>
       {list.map((item, index) => (
-        <LinkItem
-          key={index}
-          url={DUMP_PREFIX + item}
-          label={DUMP_PREFIX + item}
-        />
+        <LinkItem key={index} url={item} label={DUMP_PREFIX + item} />
       ))}
     </List>
   );

@@ -147,7 +147,7 @@ export const getStaticProps = (async (ctx) => {
       question,
       explanation,
       err,
-      reavalidate: 5,
+      reavalidate: 1,
     },
   };
 }) satisfies GetStaticProps<{

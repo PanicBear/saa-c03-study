@@ -19,7 +19,11 @@ import { unified } from "unified";
 export default function Post({
   question,
   explanation,
+  err,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  useEffect(() => {
+    console.log(err);
+  });
   return (
     <>
       <article
@@ -42,30 +46,37 @@ export const getStaticPaths = (() => {
 }) satisfies GetStaticPaths;
 
 export const getStaticProps = (async (ctx) => {
-  // let question = "";
-  // let explanation = "";
+  let question = "";
+  let explanation = "";
+  let err = "";
 
-  const [q, e] = readdirSync(
-    `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.id}`
-  ).map((fileName) => {
-    const content = readFileSync(
-      `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.id}/${fileName}`,
-      "utf-8"
-    );
+  try {
+    const [q, e] = readdirSync(
+      `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.id}`
+    ).map((fileName) => {
+      const content = readFileSync(
+        `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.id}/${fileName}`,
+        "utf-8"
+      );
 
-    return matter(content).content;
-  });
+      return matter(content).content;
+    });
 
-  const question =
-    (await unified().use(remarkParse).use(remarkHtml).process(q)) + "";
+    question =
+      (await unified().use(remarkParse).use(remarkHtml).process(q)) + "";
 
-  const explanation =
-    (await unified().use(remarkParse).use(remarkHtml).process(e)) + "";
+    explanation =
+      (await unified().use(remarkParse).use(remarkHtml).process(e)) + "";
+  } catch (error) {
+    err = JSON.stringify(error);
+  }
 
   return {
     props: {
       question,
       explanation,
+      err,
+      reavalidate: 1,
     },
   };
 }) satisfies GetStaticProps<{

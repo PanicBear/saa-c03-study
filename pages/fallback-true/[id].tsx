@@ -117,7 +117,14 @@ export const getStaticProps = (async (ctx) => {
 
   try {
     const questionFile = matter.read(
-      path.join(process.cwd(), "sample-file", `sample${ctx.params?.id}.md`)
+      path.join(
+        process.cwd(),
+        "AWS Certification",
+        "SAA-C03",
+        "덤프",
+        `문제${ctx.params?.id}`,
+        `문제.md`
+      )
     );
 
     const parsedQuestion = await unified()

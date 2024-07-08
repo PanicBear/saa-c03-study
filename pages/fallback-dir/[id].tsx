@@ -52,10 +52,18 @@ export const getStaticProps = (async (ctx) => {
 
   try {
     const [q, e] = readdirSync(
-      `./aws-certification/SAA-C03/dump/q${ctx.params?.id}`
+      `./AWS Certification/SAA-C03/덤프/문제${ctx.params?.id}`
+      // `./aws-certification/SAA-C03/dump/q${ctx.params?.id}`
     ).map((fileName) => {
       const content = readFileSync(
-        `./aws-certification/SAA-C03/dump/q${ctx.params?.id}/${fileName}`,
+        path.join(
+          process.cwd(),
+          "AWS Certification",
+          "SAA-C03",
+          "덤프",
+          `문제${ctx.params?.id}`,
+          fileName
+        ),
         "utf-8"
       );
 

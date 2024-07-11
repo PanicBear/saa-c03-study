@@ -5,4 +5,5 @@ AWS Glue를 사용하면 70개 이상의 다양한 데이터 소스를 검색하
 ---
 ### 참조
 - [AWS DOC - AWS Glue](https://docs.aws.amazon.com/ko_kr/glue/latest/dg/what-is-glue.html)
+- [[AWS Certification/SAA-C03/덤프/문제16/문제|문제16]]
 - [[AWS Certification/SAA-C03/덤프/문제2/문제|문제2]]

@@ -10,3 +10,4 @@ Amazon RDS에서 MySQL, PostgreSQL 및 Amazon Aurora에 대한 내장 통합을 
 ### 참조
 - [AWS DOC - AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html)
 - [[AWS Certification/SAA-C03/덤프/문제11/문제|문제11]]
+- [[AWS Certification/SAA-C03/덤프/문제13/문제|문제13]]

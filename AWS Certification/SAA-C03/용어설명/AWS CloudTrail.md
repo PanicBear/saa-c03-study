@@ -4,3 +4,4 @@ AWS CloudTrail을 사용하면 AWS Management Console, AWS SDK, 명령줄 도구
 ### 참조
 - [AWS DOC - AWS CloudTrail](https://docs.aws.amazon.com/ko_kr/cloudtrail/)
 - [[AWS Certification/SAA-C03/덤프/문제3/문제|문제3]]
+- [[AWS Certification/SAA-C03/덤프/문제34/문제|문제34]]

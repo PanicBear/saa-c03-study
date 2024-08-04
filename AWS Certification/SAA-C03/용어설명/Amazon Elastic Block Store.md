@@ -11,5 +11,6 @@ Amazon Elastic Block Store(Amazon EBS)에서는 Amazon Elastic Compute Cloud(Ama
 ### 참조
 - [AWS DOC - Amazon Elastic Block Store](https://docs.aws.amazon.com/ko_kr/ebs/latest/userguide/what-is-ebs.html)
 - [[Amazon Elastic File System]]
-- [[AWS Certification/SAA-C03/덤프/문제5/문제|문제5]]
 - [[AWS Certification/SAA-C03/덤프/문제1/문제|문제1]]
+- [[AWS Certification/SAA-C03/덤프/문제5/문제|문제5]]
+- [[AWS Certification/SAA-C03/덤프/문제39/문제|문제39]]

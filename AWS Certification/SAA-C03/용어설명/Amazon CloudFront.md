@@ -21,5 +21,6 @@ CloudFront에서 여러 원본을 사용할 수 있습니다. 예를 들어 Amaz
 ###  참조
 - [AWS DOC - Amazon CloudFront](https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
 - [[AWS Certification/SAA-C03/덤프/문제12/문제|문제12]]
+- [[AWS Certification/SAA-C03/덤프/문제38/문제|문제38]]
 
 
